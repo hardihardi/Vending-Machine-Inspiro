@@ -19,7 +19,10 @@ const initialItems = [
 ];
 
 const VendingMachine = () => {
-  const [items, setItems] = useState(initialItems);
+  // Buat copy di awal dengan spread operator
+  const [items, setItems] = useState(
+    [...initialItems].map((item) => ({ ...item }))
+  );
   const [balance, setBalance] = useState(0);
   const [message, setMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -36,7 +39,7 @@ const VendingMachine = () => {
       return;
     }
 
-    setBalance(balance + amount);
+    setBalance((prevBalance) => prevBalance + amount);
     setMessage(`Uang Anda: ${balance + amount}`);
     setOpenSnackbar(true);
   };
@@ -59,19 +62,9 @@ const VendingMachine = () => {
     const updatedItems = [...items];
     updatedItems[index].stock -= 1;
     setItems(updatedItems);
-    setBalance(balance - item.price);
+    setBalance((prevBalance) => prevBalance - item.price); // Menggunakan prevBalance
     setMessage(`Anda membeli ${item.name}`);
     setOpenSnackbar(true);
-
-    setTimeout(() => {
-      const updatedItemsWithRestock = [...updatedItems];
-      updatedItemsWithRestock[index].stock += 1;
-      setItems(updatedItemsWithRestock);
-      setMessage(`Stok ${item.name} telah ditambahkan.`);
-      setOpenSnackbar(true);
-    }, 5000);
-
-    setBalance(balance + item.price);
   };
 
   const refund = () => {
@@ -81,7 +74,8 @@ const VendingMachine = () => {
   };
 
   const resetStock = () => {
-    setItems(initialItems);
+    // Reset dengan spread operator
+    setItems([...initialItems].map((item) => ({ ...item })));
     setMessage("Stok makanan telah direset.");
     setOpenSnackbar(true);
   };
@@ -131,14 +125,15 @@ const VendingMachine = () => {
           </Button>
         ))}
       </Box>
-      <Button variant="contained"
+      <Button
+        variant="contained"
         color="error" // Ubah dari "secondary" menjadi "error"
-        onClick={() => refund()}
+        onClick={refund}
         sx={{ margin: 1 }}
       >
         Kembalian Uang
       </Button>
-      <Button variant="outlined" onClick={resetStock} sx={{ margin: 1 }}>
+      <Button variant="contained" onClick={resetStock} sx={{ margin: 1 }}>
         Reset Stok
       </Button>
       <Snackbar
