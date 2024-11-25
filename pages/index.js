@@ -19,7 +19,8 @@ const initialItems = [
 ];
 
 const VendingMachine = () => {
-  const [items, setItems] = useState(initialItems);
+  // Buat copy di awal dengan spread operator
+  const [items, setItems] = useState([...initialItems].map(item => ({...item})));
   const [balance, setBalance] = useState(0);
   const [message, setMessage] = useState("");
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -63,15 +64,16 @@ const VendingMachine = () => {
     setMessage(`Anda membeli ${item.name}`);
     setOpenSnackbar(true);
 
-    setTimeout(() => {
-      const updatedItemsWithRestock = [...updatedItems];
-      updatedItemsWithRestock[index].stock += 1;
-      setItems(updatedItemsWithRestock);
-      setMessage(`Stok ${item.name} telah ditambahkan.`);
-      setOpenSnackbar(true);
-    }, 5000);
+    // Sepertinya ini tidak diperlukan
+    // setTimeout(() => {
+    //   const updatedItemsWithRestock = [...updatedItems];
+    //   updatedItemsWithRestock[index].stock += 1;
+    //   setItems(updatedItemsWithRestock);
+    //   setMessage(`Stok ${item.name} telah ditambahkan.`);
+    //   setOpenSnackbar(true);
+    // }, 5000);
 
-    setBalance(balance + item.price);
+    // setBalance(balance + item.price);
   };
 
   const refund = () => {
@@ -81,7 +83,8 @@ const VendingMachine = () => {
   };
 
   const resetStock = () => {
-    setItems(initialItems);
+    // Reset dengan spread operator
+    setItems([...initialItems].map(item => ({...item})));
     setMessage("Stok makanan telah direset.");
     setOpenSnackbar(true);
   };
